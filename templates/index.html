@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flight Price Prediction</title>
+  <style>
+   
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      
+      background: 
+       linear-gradient(rgba(243, 246, 237, 0.85), rgba(124, 195, 127, 0.85)),
+        url('https://images.unsplash.com/photo-1711022096677-ec81b21be532?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fHw%3D') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      width: 100px;    
+      height: 100px;   
+      filter: drop-shadow(0 3px 3px rgba(0,0,0,0.15));
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    label, select, input {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    select, input {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: 0.3s;
+      font-size: 1rem;
+    }
+
+    select:hover, input:hover,
+    select:focus, input:focus {
+      background-color: #f0f8ff;
+      border-color: #007BFF;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+      outline: none;
+    }
+
+    button {
+      padding: 12px;
+      width: 100%;
+      border: none;
+      background: #ff6b81;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #e55063;
+    }
+
+    #results-container {
+      margin-top: 30px;
+      max-width: 600px;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+    }
+
+    .airline-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      width: 180px;
+      padding: 15px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeSlideIn 0.6s forwards;
+    }
+
+    .airline-card img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .airline-card img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.6);
+    }
+
+    .price {
+      font-size: 1.1rem;
+      color: #007BFF;
+      font-weight: bold;
+    }
+
+    #back-btn {
+      margin: 25px auto 0;
+      background: linear-gradient(135deg, #43e97b, #38f9d7);
+      color: white;
+      padding: 10px 24px;
+      font-size: 14px;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+      transition: background 0.3s ease, transform 0.2s ease;
+      display: none;
+    }
+
+    #back-btn:hover {
+      background: linear-gradient(135deg, #31d77a, #1cd8c3);
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="form-container">
+    <img src="https://img.freepik.com/premium-vector/alphabet-o-with-aero-plane-travel-icon-aviation-logo-sign-flying-symbol-flight-icon_565585-12949.jpg?ga=GA1.1.1694559196.1726341277&semt=ais_hybrid&w=740" alt="Airplane Flight Logo" class="logo" />
+    <h2>Flight Price Prediction</h2>
+    <form id="price-form">
+      <label for="source">Source:</label>
+      <select id="source" name="source" required>
+        <option value="" disabled selected>Select Source</option>
+        <option>Delhi</option>
+        <option>Kolkata</option>
+        <option>Mumbai</option>
+        <option>Chennai</option>
+        <option>Bengaluru</option>
+        <option>Hyderabad</option>
+        <option>Ahmedabad</option>
+        <option>Jaipur</option>
+        <option>Srinagar</option>
+      </select>
+
+      <label for="destination">Destination:</label>
+      <select id="destination" name="destination" required>
+        <option value="" disabled selected>Select Destination</option>
+        <option>Cochin</option>
+        <option>Banglore</option>
+        <option>Hyderabad</option>
+        <option>New Delhi</option>
+        <option>Pune</option>
+        <option>Goa</option>
+        <option>Dubai</option>
+        <option>Nepal</option>
+        <option>Aligarh</option>
+      </select>
+
+      <label for="passengers">Number of Passengers:</label>
+      <input type="number" id="passengers" name="passengers" min="1" max="10" value="1" required />
+
+      <label for="stops">Total Stops:</label>
+      <input type="number" id="stops" name="stops" min="0" max="3" required />
+
+      <label for="date">Date of Journey:</label>
+      <input type="date" id="date" name="date" required />
+
+      <button type="submit">Predict Price</button>
+    </form>
+  </div>
+
+  <div id="results-container" style="display:none;"></div>
+  <button id="back-btn">Back to Form</button>
+
+  <script>
+    const airlineData = [
+      {
+        name: "IndiGo",
+        img: 'https://images.unsplash.com/photo-1623888676435-d3b01b4d1dc0?w=400&auto=format&fit=crop&q=60',
+        basePrice: 4500
+      },
+      {
+        name: "Air India",
+        img: 'https://plus.unsplash.com/premium_photo-1677838848138-82699f276319?w=400&auto=format&fit=crop&q=60',
+        basePrice: 5200
+      },
+      {
+        name: "SpiceJet",
+        img: 'https://images.unsplash.com/photo-1610642372677-bcddb69f3531?w=400&auto=format&fit=crop&q=60',
+        basePrice: 4800
+      },
+      {
+        name: "Jet Airways",
+        img: 'https://images.unsplash.com/photo-1627890335103-7f53e98d5b07?w=400&auto=format&fit=crop&q=60',
+        basePrice: 6000
+      }
+    ];
+
+    const form = document.getElementById('price-form');
+    const formContainer = document.getElementById('form-container');
+    const resultsContainer = document.getElementById('results-container');
+    const backBtn = document.getElementById('back-btn');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const stops = parseInt(form.stops.value, 10);
+      const passengers = parseInt(form.passengers.value, 10);
+
+      formContainer.style.display = 'none';
+      resultsContainer.innerHTML = '';
+      resultsContainer.style.display = 'flex';
+      backBtn.style.display = 'block';
+
+      airlineData.forEach((airline, idx) => {
+        const price = (airline.basePrice + stops * 500) * passengers;
+
+        const card = document.createElement('div');
+        card.className = 'airline-card';
+        card.style.animationDelay = `${idx * 0.2}s`;
+
+        card.innerHTML = `
+          <img src="${airline.img}" alt="${airline.name} Logo" />
+          <div><strong>${airline.name}</strong></div>
+          <div class="price">₹${price.toLocaleString()}</div>
+        `;
+
+        resultsContainer.appendChild(card);
+      });
+    });
+
+    backBtn.addEventListener('click', () => {
+      resultsContainer.style.display = 'none';
+      backBtn.style.display = 'none';
+      formContainer.style.display = 'block';
+      form.reset();
+    });
+  </script>
+
+</body>
+</html>
+
